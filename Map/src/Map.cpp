@@ -70,12 +70,11 @@ void Map::Draw(GLFWwindow* window, std::vector<std::string>Files)
     Shader shader("res/shaders/Basic.shader");
 
     glm::mat4 proj = glm::ortho(-400.0f, 400.0f, -400.0f, 400.0f, -1.0f, 1.0f);
-    glm::vec3 translationA(0, 0, 0);
-    glm::vec3 translationB(400, -00, 0);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
     shader.Bind();
     {
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
+        glm::vec3 translation(0, 0, 0);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
         glm::mat4 mvp = proj * view * model;
         shader.SetUniformMat4f("u_MVP", mvp);
         std::string file;
@@ -87,7 +86,8 @@ void Map::Draw(GLFWwindow* window, std::vector<std::string>Files)
     }
 
     {
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+        glm::vec3 translation(400, -00, 0);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
         glm::mat4 mvp = proj * view * model;
         shader.SetUniformMat4f("u_MVP", mvp);
         std::string file;
@@ -99,8 +99,8 @@ void Map::Draw(GLFWwindow* window, std::vector<std::string>Files)
     }
 
     {
-        glm::vec3 translationB(00, -400, 0);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+        glm::vec3 translation(00, -400, 0);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
         glm::mat4 mvp = proj * view * model;
         shader.SetUniformMat4f("u_MVP", mvp);
         std::string file;
@@ -112,8 +112,8 @@ void Map::Draw(GLFWwindow* window, std::vector<std::string>Files)
     }
 
     {
-        glm::vec3 translationB(400, -400, 0);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+        glm::vec3 translation(400, -400, 0);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
         glm::mat4 mvp = proj * view * model;
         shader.SetUniformMat4f("u_MVP", mvp);
         std::string file;
@@ -133,8 +133,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
     if (key == GLFW_KEY_KP_ADD && action == GLFW_PRESS)
     {
-        Map::x *= 2;
-        Map::y *= 2;
+        (Map::x *= 2)++;
+        (Map::y *= 2)++;
         if (Map::resol + 1 == 23)
         {
             return;
