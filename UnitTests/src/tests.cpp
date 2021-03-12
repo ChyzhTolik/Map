@@ -1,15 +1,18 @@
 #include <catch2/catch_all.hpp>
-#include "URLReader.h"
+#include "URLReader.cpp"
 
-unsigned int Factorial(unsigned int number) {
-    return number <= 1 ? number : Factorial(number - 1) * number;
-}
 
-TEST_CASE("Factorials are computed", "[factorial]") {
-    REQUIRE(Factorial(1) == 1);
-    REQUIRE(Factorial(2) == 2);
-    REQUIRE(Factorial(3) == 6);
-    REQUIRE(Factorial(10) == 3628800);
+TEST_CASE("Test URL params", "[URLReader]") 
+{
+    URLReader url;
+    url.SetParams(4, 5, 6);
+    REQUIRE(url.Resol() == 4);
+    REQUIRE(url.x() == 5);
+    REQUIRE(url.y() == 6);
+    url.SetSite("www.google.com/");
+    url.SetToken("554");
+    url.MakeURL();
+    REQUIRE(url.MakeURL() == "www.google.com/4/5/6?access_token=554");
 }
 
 int main(int argc, char* argv[])
