@@ -1,6 +1,6 @@
 #include "URLReader.h"
 #include <iostream>
-#include <assert.h> 
+#include <cassert> 
 
 URLReader::URLReader()
 {
@@ -26,6 +26,7 @@ void URLReader::ReadFile(const std::string& filepath)
 	if (err != 0)
 	{
 		std::cout << "Config file not found" << std::endl;
+		assert(err == 0 && "Config file not found");
 		return;
 	}
 	else
