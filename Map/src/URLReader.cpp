@@ -1,4 +1,6 @@
 #include "URLReader.h"
+#include <iostream>
+#include <assert.h> 
 
 URLReader::URLReader()
 {
@@ -18,6 +20,19 @@ std::string URLReader::MakeURL()
 
 void URLReader::ReadFile(const std::string& filepath)
 {
+	FILE* file;
+	errno_t err;
+	err = fopen_s(&file, filepath.c_str(), "r");
+	if (err != 0)
+	{
+		std::cout << "Config file not found" << std::endl;
+		return;
+	}
+	else
+	{
+		fclose(file);
+	}
+	
 	std::ifstream stream(filepath);
 	enum class ShaderType
 	{
