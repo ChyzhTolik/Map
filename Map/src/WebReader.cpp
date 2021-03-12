@@ -1,12 +1,9 @@
 #include "WebReader.h"
-#define CURL_STATICLIB
+
 #include "URLReader.h"
 #include <string>
 #include <iostream>
-#include <curl/curl.h>
 #include <fstream>
-#include <functional>
-#include <list>
 #include <algorithm>
 #include <filesystem>
 
