@@ -133,7 +133,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
     if (key == GLFW_KEY_KP_ADD && action == GLFW_PRESS)
     {
-        std::vector<std::string>Files;
         Map::x *= 2;
         Map::y *= 2;
         if (Map::resol + 1 == 23)
@@ -142,14 +141,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
         else
             ++Map::resol;
-        Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
-        Map::Draw(window, Files);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwSwapBuffers(window);
-        /* Poll for and process events */
-        glfwPollEvents();
     }
     if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_PRESS)
     {
@@ -175,16 +166,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
         else
             --Map::resol;
-
-        std::vector<std::string>Files;
-        Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
-        Map::Draw(window, Files);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwSwapBuffers(window);
-        /* Poll for and process events */
-        glfwPollEvents();
     }
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
     {
@@ -194,15 +175,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
         else
             return;
-        std::vector<std::string>Files;
-        Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
-        Map::Draw(window, Files);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwSwapBuffers(window);
-        /* Poll for and process events */
-        glfwPollEvents();
     }
     if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
     {
@@ -212,16 +184,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
         else
             Map::x--;
-
-        std::vector<std::string>Files;
-        Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
-        Map::Draw(window, Files);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwSwapBuffers(window);
-        /* Poll for and process events */
-        glfwPollEvents();
     }
     if (key == GLFW_KEY_UP && action == GLFW_PRESS)
     {
@@ -234,13 +196,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
         std::vector<std::string>Files;
         Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
-        Map::Draw(window, Files);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwSwapBuffers(window);
-        /* Poll for and process events */
-        glfwPollEvents();
+        Map::Draw(window, Files);        
     }
     if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
     {
@@ -250,17 +206,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
         else
             return;
-
-        std::vector<std::string>Files;
-        Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
-        Map::Draw(window, Files);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwSwapBuffers(window);
-        /* Poll for and process events */
-        glfwPollEvents();
     }
+    std::vector<std::string>Files;
+    Map::SetFiles(&Files, Map::resol, Map::x, Map::y);
+    Map::Draw(window, Files);
+    glfwSwapBuffers(window);
+    glfwSwapBuffers(window);
+    glfwPollEvents();
 }
 
 int Map::Run(void)
@@ -295,6 +247,7 @@ int Map::Run(void)
         std::vector<std::string>Files;
         SetFiles(&Files, 1, 0, 0);
         Draw(window, Files);
+        glfwPollEvents();
         while (!glfwWindowShouldClose(window))
         {
             glfwPollEvents();
