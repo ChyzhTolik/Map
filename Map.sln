@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Map", "Map\Map.vcxproj", "{F438EF33-C705-4BC1-8DB5-455297FE6375}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Map v1.0", "Setup\Setup.vdproj", "{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,11 @@ Global
 		{F438EF33-C705-4BC1-8DB5-455297FE6375}.Release|x64.Build.0 = Release|x64
 		{F438EF33-C705-4BC1-8DB5-455297FE6375}.Release|x86.ActiveCfg = Release|Win32
 		{F438EF33-C705-4BC1-8DB5-455297FE6375}.Release|x86.Build.0 = Release|Win32
+		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Debug|x64.ActiveCfg = Debug
+		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Debug|x86.ActiveCfg = Debug
+		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Release|x64.ActiveCfg = Release
+		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Release|x64.Build.0 = Release
+		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
