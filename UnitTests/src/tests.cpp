@@ -1,13 +1,15 @@
 #include <catch2/catch_all.hpp>
 #include "URLReader.h"
 
-TEST_CASE("URLReader params", "[URLReader]") 
-{
-    URLReader reader;
-    reader.SetParams(5, 6, 4);
-    //REQUIRE(reader.x == 6);
-    //REQUIRE(reader.y == 4);
-    //REQUIRE(reader.Resol == 5);
+unsigned int Factorial(unsigned int number) {
+    return number <= 1 ? number : Factorial(number - 1) * number;
+}
+
+TEST_CASE("Factorials are computed", "[factorial]") {
+    REQUIRE(Factorial(1) == 1);
+    REQUIRE(Factorial(2) == 2);
+    REQUIRE(Factorial(3) == 6);
+    REQUIRE(Factorial(10) == 3628800);
 }
 
 int main(int argc, char* argv[])
