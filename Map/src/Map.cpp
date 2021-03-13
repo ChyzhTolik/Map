@@ -263,8 +263,6 @@ int Map::Run(void)
         std::vector<std::string>Files;
         SetFiles(&Files, 1, 0, 0);
         Draw(window, Files);
-        SetFiles(&Files, 1, 0, 0);
-        Draw(window, Files);
         glfwPollEvents();
         while (!glfwWindowShouldClose(window))
         {
