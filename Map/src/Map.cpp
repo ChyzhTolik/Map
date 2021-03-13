@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
+#include <thread>
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
@@ -27,18 +28,33 @@ void Map::SetFiles(std::vector<std::string>* Files, int resol, int x, int y)
     std::string tilename;
     Files->clear();
     WebReader reader;
+    /*if (resol!=1)
+    {
+        std::vector<std::thread> threads(4);
+        threads[0] = std::thread([&] {reader.MakeFile(resol, x, y); });
+        threads[1] = std::thread([&] {reader.MakeFile(resol, x+1, y); });
+        threads[2] = std::thread([&] {reader.MakeFile(resol, x, y+1); });
+        threads[3] = std::thread([&] {reader.MakeFile(resol, x+1, y+1); });
+        for (size_t i = 0; i < threads.size(); i++)
+        {
+            threads[i].detach();
+        }
+    }
+    else
+    {*/
+        reader.MakeFile(resol, x, y);
+        reader.MakeFile(resol, x + 1, y);
+        reader.MakeFile(resol, x, y + 1);
+        reader.MakeFile(resol, x + 1, y + 1);
+  /*  }*/
 
     tilename = path + std::to_string(resol) + std::to_string(x) + std::to_string(y) + ".png";
-    reader.MakeFile(resol, x, y);
     Files->push_back(tilename);
     tilename = path + std::to_string(resol) + std::to_string(x + 1) + std::to_string(y) + ".png";
-    reader.MakeFile(resol, x + 1, y);
     Files->push_back(tilename);
     tilename = path + std::to_string(resol) + std::to_string(x) + std::to_string(y + 1) + ".png";
-    reader.MakeFile(resol, x, y + 1);
     Files->push_back(tilename);
     tilename = path + std::to_string(resol) + std::to_string(x + 1) + std::to_string(y + 1) + ".png";
-    reader.MakeFile(resol, x + 1, y + 1);
     Files->push_back(tilename);
 }
 
@@ -157,7 +173,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         {
             if (Map::y > 0)
             {
-                --Map::x;
+                --Map::y;
             }
         }
         if (Map::resol - 1 < 1)
@@ -245,6 +261,8 @@ int Map::Run(void)
         GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         GLCall(glEnable(GL_BLEND));
         std::vector<std::string>Files;
+        SetFiles(&Files, 1, 0, 0);
+        Draw(window, Files);
         SetFiles(&Files, 1, 0, 0);
         Draw(window, Files);
         glfwPollEvents();
