@@ -9,5 +9,5 @@ int main(void)
         std::filesystem::remove_all(entry.path());
 
     return 0;
-}
+} 
 
