@@ -88,12 +88,6 @@ size_t WebReader::write_to_file(void* contents, size_t size, size_t nmemb, void*
 	return realsize;
 }
 
-void WebReader::save_to_file(CURL* curl, FILE* fp)
-{
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-}
-
 timeval WebReader::get_timeout(CURLM* multi_handle)
 {
 	long curl_timeo = -1;
@@ -195,7 +189,6 @@ int WebReader::download_asynchronous(int resol, int x, int y)
 			fopen_s(&files[i], tilename.c_str(), "wb");
 			curl_easy_setopt(handle.get(), CURLOPT_WRITEFUNCTION, NULL);
 			curl_easy_setopt(handle.get(), CURLOPT_WRITEDATA, files[i]);
-			//save_to_file(handle.get(), &files[i]);
 			const char* url = furl.c_str();
 			curl_easy_setopt(handle.get(), CURLOPT_URL, url);
 			i++;
