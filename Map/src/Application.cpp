@@ -12,6 +12,6 @@ int main(void)
         for (const auto& entry : std::filesystem::directory_iterator("Tiles/"))
             std::filesystem::remove_all(entry.path());
     }
-    return 0;
+    return 0; 
 }
 
