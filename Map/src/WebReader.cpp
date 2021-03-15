@@ -30,52 +30,16 @@ MultiHandle CreateMultiHandle()
 		throw std::runtime_error("Failed creating CURL multi object");
 	}
 	return curl;
-} 
-
-size_t write_to_file(void* contents, size_t size, size_t nmemb, void* userp)
-{
-	size_t realsize = size * nmemb;
-	auto file = reinterpret_cast<std::ofstream*>(userp);
-	file->write(reinterpret_cast<const char*>(contents), realsize);
-	return realsize;
-} 
-
-void save_to_file(CURL* curl,int i)
-{
-	std::string fname = "downloaded_data"+std::to_string(i)+".png";
-	static std::ofstream file(fname, std::ios::binary);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_file);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&file));
-	/*FILE* fp = nullptr;
-	fopen_s(&fp, fname.c_str(), "wb");
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-	fclose(fp);*/
-}
-
-void set_ssl(CURL* curl)
-{
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-} 
+}  
 
 WebReader::WebReader() :resol(1), x(0), y(0)
 {
-	//curl_global_init(CURL_GLOBAL_DEFAULT);
+	curl_global_init(CURL_GLOBAL_DEFAULT);
 }
 
 WebReader::~WebReader()
 {
-	//curl_global_cleanup();
-}
-
-void WebReader::add_transfer(CURLM* cm, int i)
-{
-	CURL* eh = curl_easy_init();
-	curl_easy_setopt(eh, CURLOPT_WRITEFUNCTION, NULL);
-	curl_easy_setopt(eh, CURLOPT_URL, urls[i]);
-	curl_easy_setopt(eh, CURLOPT_PRIVATE, urls[i]);
-	curl_multi_add_handle(cm, eh);
+	curl_global_cleanup();
 }
 
 void WebReader::MakeFile(int resol, int x, int y)
@@ -116,92 +80,21 @@ void WebReader::MakeFile(int resol, int x, int y)
 	// Close the file 
 	fclose(fp);
 }
-
-void WebReader::MakeFiles(int resol, int x, int y)
+size_t WebReader::write_to_file(void* contents, size_t size, size_t nmemb, void* userp)
 {
-	URLReader myurl;
-	myurl.SetParams(resol, x, y);
-	std::string furl;
-	furl = myurl.MakeURL();
-	urls.push_back(furl);
-	myurl.SetParams(resol, x+1, y);
-	furl = myurl.MakeURL();
-	urls.push_back(furl);
-	myurl.SetParams(resol, x, y+1);
-	furl = myurl.MakeURL();
-	urls.push_back(furl);
-	myurl.SetParams(resol, x+1, y+1);
-	furl = myurl.MakeURL();
-	urls.push_back(furl);
-	///
-	std::vector<CURL*> handles(4);
-	for (size_t i = 0; i < 4; i++)
-	{
-		handles[i]= curl_easy_init();
-	}
-	for (size_t i=0; i < handles.size();i++)
-	{
-		/* set options */
-		//handles[i] = curl_easy_init();
-		curl_easy_setopt(handles[i], CURLOPT_URL, "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/512/0/0/0?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXFhYTA2bTMyeW44ZG0ybXBkMHkifQ.gUGbDOPUN1v1fTs5SeOR4A");
-		set_ssl(handles[i]);
-		save_to_file(handles[i],0);
-		/* Perform the request, res will get the return code */
-		auto res = curl_easy_perform(handles[i]);
-		/* Check for errors */
-		if (res != CURLE_OK)
-		{
-			std::cerr << "curl_easy_perform() failed:" <<
-				curl_easy_strerror(res) << std::endl;
-		}
-		curl_easy_cleanup(handles[i]);
-	}    
-	//
-
-	//CURLM* cm;
-	//CURLMsg* msg;
-	//unsigned int transfers = 0;
-	//int msgs_left = -1;
-	//int still_alive = 1;
-
-	//curl_global_init(CURL_GLOBAL_ALL);
-	//cm = curl_multi_init();
-
-	///* Limit the amount of simultaneous connections curl should allow: */
-	//curl_multi_setopt(cm, CURLMOPT_MAXCONNECTS, (long)MAX_PARALLEL);
-
-	//for (transfers = 0; transfers < MAX_PARALLEL; transfers++)
-	//	add_transfer(cm, transfers);
-
-	//do {
-	//	curl_multi_perform(cm, &still_alive);
-
-	//	while ((msg = curl_multi_info_read(cm, &msgs_left))) {
-	//		if (msg->msg == CURLMSG_DONE) {
-	//			char* url;
-	//			CURL* e = msg->easy_handle;
-	//			curl_easy_getinfo(msg->easy_handle, CURLINFO_PRIVATE, &url);
-	//			fprintf(stderr, "R: %d - %s <%s>\n",
-	//				msg->data.result, curl_easy_strerror(msg->data.result), url);
-	//			curl_multi_remove_handle(cm, e);
-	//			curl_easy_cleanup(e);
-	//		}
-	//		else {
-	//			fprintf(stderr, "E: CURLMsg (%d)\n", msg->msg);
-	//		}
-	//		if (transfers < urls.size())
-	//			add_transfer(cm, transfers++);
-	//	}
-	//	if (still_alive)
-	//		curl_multi_wait(cm, NULL, 0, 1000, NULL);
-
-	//} while (still_alive || (transfers < urls.size()));
-
-	//curl_multi_cleanup(cm);
-	//curl_global_cleanup();
+	size_t realsize = size * nmemb;
+	auto file = reinterpret_cast<std::ofstream*>(userp);
+	file->write(reinterpret_cast<const char*>(contents), realsize);
+	return realsize;
 }
 
-timeval get_timeout(CURLM* multi_handle)
+void WebReader::save_to_file(CURL* curl, FILE* fp)
+{
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+}
+
+timeval WebReader::get_timeout(CURLM* multi_handle)
 {
 	long curl_timeo = -1;
 	/* set a suitable timeout to play around with */
@@ -220,7 +113,7 @@ timeval get_timeout(CURLM* multi_handle)
 	return timeout;
 }
 
-int wait_if_needed(CURLM* multi_handle, timeval& timeout)
+int WebReader::wait_if_needed(CURLM* multi_handle, timeval& timeout)
 {
 	fd_set fdread;
 	fd_set fdwrite;
@@ -246,7 +139,7 @@ int wait_if_needed(CURLM* multi_handle, timeval& timeout)
 	return rc;
 }
 
-void multi_loop(CURLM* multi_handle)
+void WebReader::multi_loop(CURLM* multi_handle)
 {
 	int still_running = 0; /* keep number of running handles */
 
@@ -266,9 +159,19 @@ void multi_loop(CURLM* multi_handle)
 		/* else select error */
 	}
 }
-int WebReader::download_asynchronous(void)
+int WebReader::download_asynchronous(int resol, int x, int y)
 {
-	std::vector<EasyHandle> handles(3);
+	std::vector<URLReader> myurls(4);
+	std::vector<FILE*> files(4);
+	myurls[0].SetParams(resol, x, y);
+	myurls[1].SetParams(resol, x+1, y);
+	myurls[2].SetParams(resol, x, y+1);
+	myurls[3].SetParams(resol, x+1, y+1);
+	std::string furl; 
+	std::filesystem::create_directories("./Tiles");
+	std::string tilename;
+
+	std::vector<EasyHandle> handles(4);
 	MultiHandle multi_handle;
 
 	/* init easy and multi stacks */
@@ -284,13 +187,18 @@ int WebReader::download_asynchronous(void)
 	}
 	/* set options */
 	int i = 0;
-	std::for_each(handles.begin(), handles.end(), [&i](auto& handle) 
+	std::for_each(handles.begin(), handles.end(), [&i,this,&furl,&tilename,&myurls,&files](auto& handle) 
 		{
-		curl_easy_setopt(handle.get(), CURLOPT_URL, "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/512/0/0/0?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXFhYTA2bTMyeW44ZG0ybXBkMHkifQ.gUGbDOPUN1v1fTs5SeOR4A");
-		curl_easy_setopt(handle.get(), CURLOPT_PRIVATE, "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/512/0/0/0?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXFhYTA2bTMyeW44ZG0ybXBkMHkifQ.gUGbDOPUN1v1fTs5SeOR4A");
-		set_ssl(handle.get());
-		save_to_file(handle.get(),i);
-		i++;
+			furl = myurls[i].MakeURL();
+			std::string tilename = "Tiles/tile";
+			tilename += std::to_string(myurls[i].Resol()) + std::to_string(myurls[i].x()) + std::to_string(myurls[i].y()) + ".png";
+			fopen_s(&files[i], tilename.c_str(), "wb");
+			curl_easy_setopt(handle.get(), CURLOPT_WRITEFUNCTION, NULL);
+			curl_easy_setopt(handle.get(), CURLOPT_WRITEDATA, files[i]);
+			//save_to_file(handle.get(), &files[i]);
+			const char* url = furl.c_str();
+			curl_easy_setopt(handle.get(), CURLOPT_URL, url);
+			i++;
 		});
 
 	/* add the individual transfers */
@@ -299,5 +207,9 @@ int WebReader::download_asynchronous(void)
 	multi_loop(multi_handle.get());
 
 	std::for_each(handles.begin(), handles.end(), [&multi_handle](auto& handle) {curl_multi_remove_handle(multi_handle.get(), handle.get()); });
+	for (size_t i = 0; i < files.size(); i++)
+	{
+		fclose(files[i]);
+	}
 	return 0;
 } 

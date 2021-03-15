@@ -9,10 +9,13 @@ public:
 	WebReader();
 	~WebReader();
 	void MakeFile(int resol,int x, int y);
-	void MakeFiles(int resol, int x, int y);
-	int download_asynchronous(void);
+	int download_asynchronous(int resol, int x, int y);
 private:
-	void add_transfer(CURLM* cm, int i);
+	void multi_loop(CURLM* multi_handle);
+	timeval get_timeout(CURLM* multi_handle);
+	int wait_if_needed(CURLM* multi_handle, timeval& timeout);
+	void save_to_file(CURL* curl, FILE* fp);
+	size_t write_to_file(void* contents, size_t size, size_t nmemb, void* userp);
 	int resol, x, y;
 	std::vector<std::string> urls;
 };
