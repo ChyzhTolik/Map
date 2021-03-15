@@ -28,26 +28,13 @@ void Map::SetFiles(std::vector<std::string>* Files, int resol, int x, int y)
     std::string tilename;
     Files->clear();
     WebReader reader;
-    /*if (resol!=1)
-    {
-        std::vector<std::thread> threads(4);
-        threads[0] = std::thread([&] {reader.MakeFile(resol, x, y); });
-        threads[1] = std::thread([&] {reader.MakeFile(resol, x+1, y); });
-        threads[2] = std::thread([&] {reader.MakeFile(resol, x, y+1); });
-        threads[3] = std::thread([&] {reader.MakeFile(resol, x+1, y+1); });
-        for (size_t i = 0; i < threads.size(); i++)
-        {
-            threads[i].detach();
-        }
-    }
-    else
-    {*/
-        reader.MakeFile(resol, x, y);
-        reader.MakeFile(resol, x + 1, y);
-        reader.MakeFile(resol, x, y + 1);
-        reader.MakeFile(resol, x + 1, y + 1);
-  /*  }*/
-
+    /*synchronous tiles download*/
+    /*reader.MakeFile(resol, x, y);
+    reader.MakeFile(resol, x + 1, y);
+    reader.MakeFile(resol, x, y + 1);
+    reader.MakeFile(resol, x + 1, y + 1);*/
+    /*asynchronous tiles download*/
+    reader.download_asynchronous(resol, x, y);
     tilename = path + std::to_string(resol) + std::to_string(x) + std::to_string(y) + ".png";
     Files->push_back(tilename);
     tilename = path + std::to_string(resol) + std::to_string(x + 1) + std::to_string(y) + ".png";

@@ -27,6 +27,24 @@ TEST_CASE("Test tile creation", "[WEBReader]")
     std::filesystem::remove("Tiles/tile111.png");
 }
 
+TEST_CASE("Test multi tile creation", "[WEBReader]")
+{
+    WebReader reader;
+    reader.download_asynchronous(2,0,0);
+    REQUIRE(std::filesystem::exists("Tiles/tile200.png") == true);
+    REQUIRE(std::filesystem::exists("Tiles/tile201.png") == true);
+    REQUIRE(std::filesystem::exists("Tiles/tile210.png") == true);
+    REQUIRE(std::filesystem::exists("Tiles/tile211.png") == true);
+
+    reader.download_asynchronous(5, 4, 2);
+    REQUIRE(std::filesystem::exists("Tiles/tile542.png") == true);
+    REQUIRE(std::filesystem::exists("Tiles/tile552.png") == true);
+    REQUIRE(std::filesystem::exists("Tiles/tile543.png") == true);
+    REQUIRE(std::filesystem::exists("Tiles/tile553.png") == true);
+    for (const auto& entry : std::filesystem::directory_iterator("Tiles/"))
+        std::filesystem::remove_all(entry.path());
+}
+
 int main(int argc, char* argv[])
 {
     // global setup...
@@ -34,6 +52,5 @@ int main(int argc, char* argv[])
     int result = Catch::Session().run(argc, argv);
 
     // global clean-up...
-    std::cin.get();
     return result;
 }
