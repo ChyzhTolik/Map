@@ -365,4 +365,5 @@ FodyWeavers.xsd
 # Tiles
 *.png
 
-/Setup
+setup.exe
+map.msi
