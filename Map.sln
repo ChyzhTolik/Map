@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Map", "Map\Map.vcxproj", "{
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Map v1.0", "Setup\Setup.vdproj", "{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -28,6 +30,14 @@ Global
 		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Release|x64.ActiveCfg = Release
 		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Release|x64.Build.0 = Release
 		{4B2EFCD4-46BC-4C57-A154-4E43BE7D1554}.Release|x86.ActiveCfg = Release
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Debug|x64.ActiveCfg = Debug|x64
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Debug|x64.Build.0 = Debug|x64
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Debug|x86.ActiveCfg = Debug|Win32
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Debug|x86.Build.0 = Debug|Win32
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Release|x64.ActiveCfg = Release|x64
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Release|x64.Build.0 = Release|x64
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Release|x86.ActiveCfg = Release|Win32
+		{2803A4F2-69D3-4A21-B4E9-2C511379EB4B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
