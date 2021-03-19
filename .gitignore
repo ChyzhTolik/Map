@@ -367,3 +367,6 @@ FodyWeavers.xsd
 
 *.exe
 *.msi
+
+build
+CMakeFiles
